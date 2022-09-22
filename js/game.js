@@ -1,14 +1,21 @@
-const contador = 0;
 let palabra;
 let msg;
 let encontradas;
 let numeroIntentos;
 
 function iniciarJuego() {
-  botonVerificar(false);
-  botonIngreso(true);
   let palabra = document.getElementById("palabra").value;
-  elegirPalabra(palabra);
+  if (palabra != "") {
+    document.getElementById("palabra").disabled = true;
+    elegirPalabra(palabra);
+    botonVerificar(false);
+    botonIngreso(true);
+    numeroIntentos = 0;
+    document.getElementById("intentos").innerText =
+      "Numero de intentos: " + numeroIntentos;
+  } else {
+    alert("No se ingresó una palabra correcta");
+  }
 }
 
 function botonIngreso(valor) {
@@ -91,6 +98,7 @@ function ganador() {
 }
 
 function reiniciar() {
+  document.getElementById("palabra").disabled = false;
   botonReiniciar(true);
   botonIngreso(false);
   let casillas = document.getElementsByClassName("casillitas");
@@ -99,9 +107,7 @@ function reiniciar() {
     document.querySelector(".casillas").removeChild(casillas[0]);
   }
   document.getElementById("mensajeFinal0").innerText = "";
-  numeroIntentos = 0;
-  document.getElementById("intentos").innerText =
-    "Numero de intentos: " + numeroIntentos;
+  document.getElementById("intentos").innerText = "";
 }
 
 function limpiarCasillas() {
