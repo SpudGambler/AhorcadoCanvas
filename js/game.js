@@ -2,13 +2,13 @@ const contador = 0;
 let palabra;
 let msg;
 let encontradas;
-let numeroIntentos = 0;
+let numeroIntentos;
 
 function iniciarJuego() {
-  let palabra = document.getElementById("palabra").value;
-  elegirPalabra(palabra);
   botonVerificar(false);
   botonIngreso(true);
+  let palabra = document.getElementById("palabra").value;
+  elegirPalabra(palabra);
 }
 
 function botonIngreso(valor) {
@@ -35,10 +35,6 @@ function elegirPalabra(palabra) {
   crearCasillas(msg);
 }
 
-function hola2() {
-  console.log("Hola");
-}
-
 function crearCasillas(arr) {
   for (let i = 0; i < arr.length; i++) {
     const casillas = document.querySelector(".casillas");
@@ -60,8 +56,8 @@ function verificar() {
       alguno = true;
     }
   }
+  limpiarCasillas();
   if (alguno == false) {
-    limpiarCasillas();
     numeroIntentos++;
     document.getElementById("intentos").innerText =
       "Numero de intentos: " + numeroIntentos;
@@ -116,12 +112,13 @@ function limpiarCasillas() {
     }
   }
 }
+
 function mostrarFaltantes() {
   let casillas = document.getElementsByClassName("casillitas");
   for (let i = 0; i < msg.length; i++) {
     if (encontradas[i] != msg[i]) {
       casillas[i].value = msg[i];
-      casillas[i].colo
+      casillas[i].style.color = "red";
     }
   }
 }
