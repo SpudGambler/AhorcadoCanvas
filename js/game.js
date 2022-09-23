@@ -2,11 +2,14 @@ let palabra;
 let msg;
 let encontradas;
 let numeroIntentos;
+let c;
+canvas();
 
 function iniciarJuego() {
   let palabra = document.getElementById("palabra").value;
   if (palabra != "") {
     document.getElementById("palabra").disabled = true;
+    document.getElementById("palabra").value = "";
     elegirPalabra(palabra);
     botonVerificar(false);
     botonIngreso(true);
@@ -49,6 +52,10 @@ function crearCasillas(arr) {
     input.type = "text";
     input.id = i;
     input.className = "casillitas"; // set the CSS class
+    if (arr[i] == " ") {
+      input.disabled = true;
+      encontradas[i] = " ";
+    }
     casillas.appendChild(input);
   }
 }
@@ -57,7 +64,7 @@ function verificar() {
   let casillas = document.getElementsByClassName("casillitas");
   let alguno = false;
   for (let i = 0; i < msg.length; i++) {
-    if (msg[i] == casillas[i].value && encontradas[i] != msg[i]) {
+    if (similitud(msg[i], casillas[i].value) && encontradas[i] != msg[i]) {
       encontradas[i] = msg[i];
       document.getElementById(i).disabled = true;
       alguno = true;
@@ -74,8 +81,17 @@ function verificar() {
   }
 }
 
+function similitud(wordR, wordC) {
+  return (
+    wordR == wordC ||
+    wordR == wordC.toUpperCase() ||
+    wordR == wordC.toLowerCase()
+  );
+}
+
 function ahorcado() {
-  if (numeroIntentos == 5) {
+  agregarParte();
+  if (numeroIntentos == 6) {
     document.getElementById("mensajeFinal0").innerText = "Ahorcado";
     mostrarFaltantes();
     botonVerificar(true);
@@ -99,6 +115,7 @@ function ganador() {
 
 function reiniciar() {
   document.getElementById("palabra").disabled = false;
+  document.getElementById("palabra").value = "";
   botonReiniciar(true);
   botonIngreso(false);
   let casillas = document.getElementsByClassName("casillitas");
@@ -108,6 +125,7 @@ function reiniciar() {
   }
   document.getElementById("mensajeFinal0").innerText = "";
   document.getElementById("intentos").innerText = "";
+  reiniciarCanvas();
 }
 
 function limpiarCasillas() {
@@ -125,6 +143,130 @@ function mostrarFaltantes() {
     if (encontradas[i] != msg[i]) {
       casillas[i].value = msg[i];
       casillas[i].style.color = "red";
+      casillas[i].disabled = true;
     }
   }
+}
+
+function agregarParte() {
+  switch (numeroIntentos) {
+    case 1:
+      drawCircle();
+      break;
+    case 2:
+      drawPalo();
+      break;
+    case 3:
+      drawBrazoDerecho();
+      break;
+    case 4:
+      drawBrazoIzquierdo();
+      break;
+    case 5:
+      drawPiernaDerecha();
+      break;
+    case 6:
+      drawPiernaIzquierda();
+      break;
+    default:
+      break;
+  }
+}
+
+function canvas() {
+  c = document.getElementById("canvas");
+  c.width = window.innerWidth;
+  c.height = window.innerHeight;
+  dibujarFondo();
+}
+
+function dibujarFondo() {
+  var ctx = c.getContext("2d");
+  ctx.lineWidth = 50;
+  ctx.beginPath();
+  ctx.moveTo(window.innerWidth / 4, window.innerHeight / 10 - 5);
+  ctx.lineTo(window.innerWidth / 4, window.innerHeight - 20);
+  ctx.moveTo(window.innerWidth / 4 - 200, window.innerHeight - 20);
+  ctx.lineTo(window.innerWidth / 4 + 200, window.innerHeight - 20);
+  ctx.moveTo(window.innerWidth / 4 - 25, window.innerHeight / 5 - 90);
+  ctx.lineTo(window.innerWidth / 4 + 330, window.innerHeight / 5 - 90);
+  ctx.moveTo(window.innerWidth / 4 - 10, window.innerHeight / 4 + 50);
+  ctx.lineTo(window.innerWidth / 4 + 200, window.innerHeight / 5 - 90);
+  ctx.stroke();
+  ctx.lineWidth = 10;
+  ctx.moveTo(window.innerWidth / 2 - 5, window.innerHeight / 10 - 5);
+  ctx.lineTo(window.innerWidth / 2 - 5, window.innerHeight / 10 + 10);
+  ctx.stroke();
+}
+
+function drawCircle() {
+  var ctx = c.getContext("2d");
+  ctx.beginPath();
+  ctx.arc(
+    window.innerWidth / 2,
+    window.innerHeight / 2 - 180,
+    60,
+    0,
+    (Math.PI / 180) * 360,
+    false
+  );
+  ctx.stroke();
+  borderColor(ctx);
+}
+
+function drawPalo() {
+  var ctx = c.getContext("2d");
+  ctx.beginPath();
+  ctx.moveTo(window.innerWidth / 2, window.innerHeight / 2 - 120);
+  ctx.lineTo(window.innerWidth / 2, window.innerHeight / 2 + 80);
+  ctx.stroke();
+  borderColor(ctx);
+}
+
+function drawBrazoDerecho() {
+  var ctx = c.getContext("2d");
+  ctx.beginPath();
+  ctx.moveTo(window.innerWidth / 2, window.innerHeight / 2 - 90);
+  ctx.lineTo(window.innerWidth / 2 + 100, window.innerHeight / 2);
+  ctx.stroke();
+  borderColor(ctx);
+}
+
+function drawBrazoIzquierdo() {
+  var ctx = c.getContext("2d");
+  ctx.beginPath();
+  ctx.moveTo(window.innerWidth / 2, window.innerHeight / 2 - 90);
+  ctx.lineTo(window.innerWidth / 2 - 100, window.innerHeight / 2);
+  ctx.stroke();
+  borderColor(ctx);
+}
+
+function drawPiernaDerecha() {
+  var ctx = c.getContext("2d");
+  ctx.beginPath();
+  ctx.moveTo(window.innerWidth / 2, window.innerHeight / 2 + 75);
+  ctx.lineTo(window.innerWidth / 2 + 75, window.innerHeight / 2 + 250);
+  ctx.stroke();
+  borderColor(ctx);
+}
+
+function drawPiernaIzquierda() {
+  var ctx = c.getContext("2d");
+  ctx.beginPath();
+  ctx.moveTo(window.innerWidth / 2, window.innerHeight / 2 + 75);
+  ctx.lineTo(window.innerWidth / 2 - 75, window.innerHeight / 2 + 250);
+  ctx.stroke();
+  borderColor(ctx);
+}
+
+function borderColor(c) {
+  screen.strokeStyle = "#f00";
+  c.lineWidth = 10;
+  c.stroke();
+}
+
+function reiniciarCanvas() {
+  var ctx = c.getContext("2d");
+  ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+  dibujarFondo();
 }
